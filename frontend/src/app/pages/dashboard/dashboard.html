@@ -1,0 +1,124 @@
+<div class="dashboard">
+
+  <header class="navbar">
+
+    <div class="brand">
+      <span>Venue</span>Vista
+    </div>
+
+    <div class="user-section">
+
+      <span *ngIf="user">
+        {{ user.name }}
+      </span>
+
+      <button type="button" (click)="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <div class="dashboard-body">
+
+    <aside class="sidebar">
+
+      <h3>Menu</h3>
+
+      <a routerLink="/dashboard" aria-current="page">
+        Dashboard
+      </a>
+
+      <a href="#venues">
+        Venues
+      </a>
+
+    </aside>
+
+
+    <main class="main-content">
+
+      <h1>Dashboard</h1>
+
+      <p class="welcome">
+        Welcome back,
+        <strong *ngIf="user">
+          {{ user.name }}
+        </strong>
+      </p>
+
+
+      <div class="cards">
+
+        <div class="card">
+          <h3>Total Venues</h3>
+          <p>{{ venues.length }}</p>
+        </div>
+
+        <div class="card">
+          <h3>Venues Listed</h3>
+          <p>{{ venues.length }}</p>
+        </div>
+
+        <div class="card">
+          <h3>Bookings</h3>
+          <p>0</p>
+        </div>
+
+      </div>
+
+
+      <div class="recent-section">
+
+        <h2 id="venues">Venues</h2>
+
+        <p *ngIf="loading">
+          Loading venues...
+        </p>
+
+        <p class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+          <button type="button" class="retry-button" (click)="loadVenues()">
+            Try again
+          </button>
+        </p>
+
+        <p *ngIf="!loading && !errorMessage && venues.length === 0">
+          No venues available.
+        </p>
+
+
+        <div class="venue-list" *ngIf="!loading && venues.length > 0">
+
+          <div
+            class="venue-card"
+            *ngFor="let venue of venues"
+          >
+
+            <h3>
+              {{ venue.name }}
+            </h3>
+
+            <p>
+              <strong>Location:</strong>
+              {{ venue.location }}
+            </p>
+
+            <p>
+              <strong>Capacity:</strong>
+              {{ venue.capacity }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>
