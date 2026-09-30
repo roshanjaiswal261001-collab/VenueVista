@@ -1,0 +1,135 @@
+<div class="page">
+
+  <header class="navbar">
+    <div class="brand">
+      <span>Venue</span>Vista
+    </div>
+
+    <div class="user-section">
+      <span *ngIf="user">{{ user.name }}</span>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <aside class="sidebar">
+      <h3>Menu</h3>
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/venues">Venues</a>
+      <a routerLink="/events" class="active">Events</a>
+    </aside>
+
+    <main class="main-content">
+
+      <h1>Events</h1>
+      <p class="subtitle">Create and manage events at your venues</p>
+
+      <!-- Add Event Form -->
+      <section class="form-card">
+        <h2>Add New Event</h2>
+
+        <form (ngSubmit)="addEvent()" class="event-form">
+
+          <div class="field">
+            <label for="name">Event Name</label>
+            <input id="name" name="name" type="text"
+                   placeholder="e.g. Arijit Singh Live"
+                   [(ngModel)]="newEvent.name" />
+          </div>
+
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category" name="category" [(ngModel)]="newEvent.category">
+              <option value="" disabled>Select category</option>
+              <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="venue">Venue</label>
+            <select id="venue" name="venue" [(ngModel)]="newEvent.venueId">
+              <option [ngValue]="0" disabled>Select venue</option>
+              <option *ngFor="let v of venues" [ngValue]="v.id">
+                {{ v.name }} ({{ v.location }})
+              </option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="eventDate">Date & Time</label>
+            <input id="eventDate" name="eventDate" type="datetime-local"
+                   [(ngModel)]="newEvent.eventDate" />
+          </div>
+
+          <div class="field">
+            <label for="ticketPrice">Ticket Price (₹)</label>
+            <input id="ticketPrice" name="ticketPrice" type="number" min="0"
+                   [(ngModel)]="newEvent.ticketPrice" />
+          </div>
+
+          <div class="field full-width">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3"
+                      placeholder="Short description of the event"
+                      [(ngModel)]="newEvent.description"></textarea>
+          </div>
+
+          <button type="submit" class="primary-btn" [disabled]="saving">
+            {{ saving ? 'Adding...' : 'Add Event' }}
+          </button>
+
+        </form>
+      </section>
+
+      <!-- Messages -->
+      <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <!-- Event List -->
+      <section>
+        <h2>All Events ({{ events.length }})</h2>
+
+        <p *ngIf="loading">Loading events...</p>
+
+        <p *ngIf="!loading && events.length === 0 && !errorMessage">
+          No events yet. Add your first event above.
+        </p>
+
+        <div class="event-list" *ngIf="!loading && events.length > 0">
+          <div class="event-card" *ngFor="let event of events">
+
+            <span class="badge">{{ event.category }}</span>
+
+            <h3>{{ event.name }}</h3>
+
+            <p class="description" *ngIf="event.description">
+              {{ event.description }}
+            </p>
+
+            <p>
+              <strong>Date:</strong>
+              {{ event.eventDate | date: 'd MMM y, h:mm a' }}
+            </p>
+
+            <p>
+              <strong>Venue:</strong>
+              {{ event.venue?.name || 'Not assigned' }}
+              <span *ngIf="event.venue?.location">({{ event.venue?.location }})</span>
+            </p>
+
+            <p class="price">
+              ₹{{ event.ticketPrice | number: '1.0-2' }}
+            </p>
+
+            <button type="button" class="delete-btn" (click)="deleteEvent(event)">
+              Delete
+            </button>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>

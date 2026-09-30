@@ -38,6 +38,14 @@ export const routes: Routes = [
       import('./pages/venues/venues').then(
         m => m.Venues
       )
+  },
+
+  {
+    path: 'events',
+    loadComponent: () =>
+      import('./pages/events/events').then(
+        m => m.Events
+      )
   }
 
 ];
