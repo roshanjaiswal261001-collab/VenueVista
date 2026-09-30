@@ -1,7 +1,10 @@
 package com.hcl.VenueManagement.controller;
 
+import com.hcl.VenueManagement.dto.EventRequest;
 import com.hcl.VenueManagement.entity.Event;
 import com.hcl.VenueManagement.service.EventService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +20,9 @@ public class EventController {
     }
 
     @PostMapping
-    public Event addEvent(@RequestBody Event event) {
-        return eventService.addEvent(event);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Event addEvent(@Valid @RequestBody EventRequest request) {
+        return eventService.createEvent(request);
     }
 
     @GetMapping

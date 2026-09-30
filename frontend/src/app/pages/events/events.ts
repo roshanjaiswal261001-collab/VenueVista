@@ -94,6 +94,12 @@ export class Events implements OnInit {
       return;
     }
 
+    if (new Date(eventDate) <= new Date()) {
+      this.errorMessage = 'Event date must be in the future.';
+      this.successMessage = '';
+      return;
+    }
+
     this.saving = true;
     this.errorMessage = '';
     this.successMessage = '';
@@ -104,7 +110,7 @@ export class Events implements OnInit {
       category,
       eventDate,
       ticketPrice,
-      venue: { id: Number(venueId) }
+      venueId: Number(venueId)
     }).subscribe({
       next: (event) => {
         this.saving = false;
@@ -123,7 +129,7 @@ export class Events implements OnInit {
       error: (error) => {
         console.error('Add event error:', error);
         this.saving = false;
-        this.errorMessage = 'Could not add event. Please try again.';
+        this.errorMessage = error?.error?.message || 'Could not add event. Please try again.';
         this.cdr.markForCheck();
       }
     });

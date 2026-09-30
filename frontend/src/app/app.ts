@@ -43,7 +43,7 @@ export interface CreateEventRequest {
   category: string;
   eventDate: string;
   ticketPrice: number;
-  venue: { id: number };
+  venueId: number;
 }
 
 export interface Seat {
