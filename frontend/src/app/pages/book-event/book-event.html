@@ -1,0 +1,149 @@
+<div class="page">
+
+  <header class="navbar">
+    <div class="brand">
+      <span>Venue</span>Vista
+    </div>
+
+    <div class="user-section">
+      <span *ngIf="user">{{ user.name }}</span>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <aside class="sidebar">
+      <h3>Menu</h3>
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/venues">Venues</a>
+      <a routerLink="/events" class="active">Events</a>
+      <a routerLink="/my-bookings">My Bookings</a>
+    </aside>
+
+    <main class="main-content">
+
+      <a routerLink="/events" class="back-link">← Back to Events</a>
+
+      <p *ngIf="loading">Loading seats...</p>
+
+      <!-- ========== SUCCESS VIEW ========== -->
+      <section class="success-card" *ngIf="confirmedBooking">
+        <div class="tick">✓</div>
+        <h1>Booking Confirmed!</h1>
+        <p class="subtitle">
+          Booking #{{ confirmedBooking.bookingId }} for
+          <strong>{{ confirmedBooking.eventName }}</strong>
+        </p>
+
+        <div class="ticket-list">
+          <div class="ticket" *ngFor="let t of confirmedBooking.tickets">
+            <div>
+              <p class="ticket-seat">Seat {{ t.seat }}</p>
+              <p class="ticket-number">{{ t.ticketNumber }}</p>
+            </div>
+            <div class="ticket-right">
+              <span class="seat-type">{{ t.seatType }}</span>
+              <p class="ticket-price">₹{{ t.price | number: '1.0-2' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="total-line">
+          Total paid: <strong>₹{{ confirmedBooking.totalAmount | number: '1.0-2' }}</strong>
+        </p>
+
+        <div class="actions">
+          <a routerLink="/my-bookings" class="primary-btn">View My Bookings</a>
+          <a routerLink="/events" class="secondary-btn">Book Another Event</a>
+        </div>
+      </section>
+
+      <!-- ========== BOOKING VIEW ========== -->
+      <ng-container *ngIf="!loading && !confirmedBooking && event">
+
+        <div class="event-header">
+          <span class="badge">{{ event.category }}</span>
+          <h1>{{ event.name }}</h1>
+          <p class="subtitle">
+            {{ event.eventDate | date: 'EEE, d MMM y, h:mm a' }}
+            · {{ event.venue?.name }} ({{ event.venue?.location }})
+            · ₹{{ event.ticketPrice | number: '1.0-2' }} per seat
+          </p>
+        </div>
+
+        <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+        <!-- No seats for this venue -->
+        <div class="empty-card" *ngIf="rows.length === 0">
+          <h3>No seats set up for this venue yet</h3>
+          <p>Ask the admin to generate seats for <strong>{{ event.venue?.name }}</strong> from the Venues page.</p>
+        </div>
+
+        <div class="booking-layout" *ngIf="rows.length > 0">
+
+          <!-- Seat map -->
+          <section class="seat-map">
+            <div class="stage">STAGE</div>
+
+            <div class="seat-row" *ngFor="let row of rows">
+              <span class="row-label">{{ row.rowName }}</span>
+
+              <button
+                type="button"
+                class="seat"
+                *ngFor="let seat of row.seats"
+                [class.vip]="seat.seatType === 'VIP'"
+                [class.booked]="isBooked(seat)"
+                [class.selected]="isSelected(seat)"
+                [disabled]="isBooked(seat)"
+                [title]="row.rowName + seat.seatNumber + ' · ' + seat.seatType"
+                (click)="toggleSeat(seat)"
+              >
+                {{ seat.seatNumber }}
+              </button>
+            </div>
+
+            <div class="legend">
+              <span><i class="box available"></i> Available</span>
+              <span><i class="box vip"></i> VIP</span>
+              <span><i class="box selected"></i> Selected</span>
+              <span><i class="box booked"></i> Booked</span>
+            </div>
+          </section>
+
+          <!-- Summary -->
+          <aside class="summary">
+            <h2>Your Selection</h2>
+
+            <p *ngIf="selectedSeatIds.size === 0" class="muted">
+              Click on seats to select them.
+            </p>
+
+            <ng-container *ngIf="selectedSeatIds.size > 0">
+              <p><strong>Seats:</strong> {{ selectedSeatLabels }}</p>
+              <p><strong>Count:</strong> {{ selectedSeatIds.size }}</p>
+              <p class="summary-total">
+                ₹{{ estimatedTotal | number: '1.0-2' }}
+              </p>
+            </ng-container>
+
+            <button
+              type="button"
+              class="primary-btn full"
+              [disabled]="selectedSeatIds.size === 0 || booking"
+              (click)="confirmBooking()"
+            >
+              {{ booking ? 'Booking...' : 'Confirm Booking' }}
+            </button>
+          </aside>
+
+        </div>
+      </ng-container>
+
+      <!-- Error when event itself failed -->
+      <p class="error-message" *ngIf="!loading && !event && errorMessage">{{ errorMessage }}</p>
+
+    </main>
+  </div>
+</div>

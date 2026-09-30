@@ -246,3 +246,28 @@
   background: #c62828;
   color: #ffffff;
 }
+/* Book Now + Delete buttons */
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.card-actions .delete-btn {
+  margin-top: 0;
+}
+
+.book-btn {
+  background: #2b211c;
+  color: #ffffff;
+  padding: 9px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.book-btn:hover {
+  background: #b8893f;
+}

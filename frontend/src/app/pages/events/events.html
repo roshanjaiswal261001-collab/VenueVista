@@ -18,6 +18,7 @@
       <a routerLink="/dashboard">Dashboard</a>
       <a routerLink="/venues">Venues</a>
       <a routerLink="/events" class="active">Events</a>
+      <a routerLink="/my-bookings">My Bookings</a>
     </aside>
 
     <main class="main-content">
@@ -122,9 +123,15 @@
               ₹{{ event.ticketPrice | number: '1.0-2' }}
             </p>
 
-            <button type="button" class="delete-btn" (click)="deleteEvent(event)">
-              Delete
-            </button>
+            <div class="card-actions">
+              <a class="book-btn" [routerLink]="['/book', event.id]">
+                Book Now
+              </a>
+
+              <button type="button" class="delete-btn" (click)="deleteEvent(event)">
+                Delete
+              </button>
+            </div>
 
           </div>
         </div>
