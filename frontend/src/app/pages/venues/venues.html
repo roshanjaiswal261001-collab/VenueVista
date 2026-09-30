@@ -1,0 +1,101 @@
+<div class="page">
+
+  <header class="navbar">
+    <div class="brand">
+      <span>Venue</span>Vista
+    </div>
+
+    <div class="user-section">
+      <span *ngIf="user">{{ user.name }}</span>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <aside class="sidebar">
+      <h3>Menu</h3>
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/venues" class="active">Venues</a>
+    </aside>
+
+    <main class="main-content">
+
+      <h1>Venues</h1>
+      <p class="subtitle">Add and manage your venues</p>
+
+      <!-- Add Venue Form -->
+      <section class="form-card">
+        <h2>Add New Venue</h2>
+
+        <form (ngSubmit)="addVenue()" class="venue-form">
+          <div class="field">
+            <label for="name">Venue Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="e.g. Grand Hall"
+              [(ngModel)]="newVenue.name"
+            />
+          </div>
+
+          <div class="field">
+            <label for="location">Location</label>
+            <input
+              id="location"
+              name="location"
+              type="text"
+              placeholder="e.g. Ghaziabad"
+              [(ngModel)]="newVenue.location"
+            />
+          </div>
+
+          <div class="field">
+            <label for="capacity">Capacity</label>
+            <input
+              id="capacity"
+              name="capacity"
+              type="number"
+              min="1"
+              placeholder="e.g. 500"
+              [(ngModel)]="newVenue.capacity"
+            />
+          </div>
+
+          <button type="submit" class="primary-btn" [disabled]="saving">
+            {{ saving ? 'Adding...' : 'Add Venue' }}
+          </button>
+        </form>
+      </section>
+
+      <!-- Messages -->
+      <p class="success-message" *ngIf="successMessage">{{ successMessage }}</p>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <!-- Venue List -->
+      <section>
+        <h2>All Venues ({{ venues.length }})</h2>
+
+        <p *ngIf="loading">Loading venues...</p>
+
+        <p *ngIf="!loading && venues.length === 0 && !errorMessage">
+          No venues yet. Add your first venue above.
+        </p>
+
+        <div class="venue-list" *ngIf="!loading && venues.length > 0">
+          <div class="venue-card" *ngFor="let venue of venues">
+            <h3>{{ venue.name }}</h3>
+            <p><strong>Location:</strong> {{ venue.location }}</p>
+            <p><strong>Capacity:</strong> {{ venue.capacity }}</p>
+
+            <button type="button" class="delete-btn" (click)="deleteVenue(venue)">
+              Delete
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>

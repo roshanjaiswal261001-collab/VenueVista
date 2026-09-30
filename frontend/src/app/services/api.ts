@@ -56,4 +56,17 @@ export class Api {
       `${API_BASE_URL}/venues`
     );
   }
+
+  addVenue(venue: Omit<Venue, 'id'>): Observable<Venue> {
+    return this.http.post<Venue>(
+      `${API_BASE_URL}/venues`,
+      venue
+    );
+  }
+
+  deleteVenue(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${API_BASE_URL}/venues/${id}`
+    );
+  }
 }

@@ -30,6 +30,14 @@ export const routes: Routes = [
       import('./pages/dashboard/dashboard').then(
         m => m.Dashboard
       )
+  },
+
+  {
+    path: 'venues',
+    loadComponent: () =>
+      import('./pages/venues/venues').then(
+        m => m.Venues
+      )
   }
 
 ];
