@@ -13,13 +13,15 @@ Built with **Spring Boot + MySQL** (backend) and **Angular** (frontend).
 - Browse upcoming events
 - Interactive seat map: VIP / regular / booked / selected seats
 - Seats are **held for 10 minutes** while paying; unpaid holds expire automatically
-- Dummy payment via UPI, Card or Net Banking
+- One-click demo payment: UPI, Card or Cash
+- QR code e-ticket for every seat (shown after payment and in My Bookings)
 - My Bookings: tickets, status, cancel (refund marked on payment)
 
 **Admins**
 - Add / delete venues
 - Add / delete events (venue picked from a dropdown)
-- Generate a full seat layout for a venue in one call (rows × seats, VIP rows)
+- Generate a full seat layout for a venue from the Venues page (rows × seats, VIP rows)
+- Verify Ticket page for the entry gate: check a ticket code and check the holder in (a used ticket cannot be reused)
 
 ---
 
@@ -42,6 +44,7 @@ Built with **Spring Boot + MySQL** (backend) and **Angular** (frontend).
 - **Seat hold with expiry.** A new booking is `PENDING_PAYMENT` and holds seats for 10 minutes. Expired holds are released automatically.
 - **DTOs instead of entities for input.** `BookingRequest`, `EventRequest`, `PaymentRequest` are validated with `@Valid`; responses use `BookingResponse` so internal fields are never exposed.
 - **Password never leaves the server.** Hashed with BCrypt and marked `WRITE_ONLY` in JSON.
+- **Unguessable ticket codes.** Each ticket gets a random suffix (e.g. `TKT-12-A5-X7K2Q9`) so codes cannot be guessed to fake a ticket.
 - **Meaningful HTTP errors.** 400 (bad input), 403 (not your booking), 404 (not found), 409 (seat already booked), 410 (hold expired).
 
 ### Booking lifecycle
@@ -114,6 +117,8 @@ UPDATE users SET role = 'ADMIN' WHERE email = 'you@example.com';
 | GET | `/api/bookings/user/{userId}` | A user's bookings |
 | PUT | `/api/bookings/{id}/cancel?userId=` | Cancel booking |
 | POST | `/api/payments/pay` | Pay for a booking → `CONFIRMED` |
+| GET | `/api/tickets/verify/{code}` | Check a ticket at the gate |
+| POST | `/api/tickets/verify/{code}/check-in` | Mark ticket as USED (entry allowed) |
 
 ---
 
@@ -122,5 +127,6 @@ UPDATE users SET role = 'ADMIN' WHERE email = 'you@example.com';
 - **JWT + Spring Security**: identify the user from a token instead of a `userId` parameter, and enforce ADMIN-only endpoints on the server (currently admin actions are hidden in the UI only)
 - Real payment gateway (e.g. Razorpay) with webhooks
 - Unique DB constraint per (event, seat) to make double booking impossible even under heavy concurrency
-- Email / PDF tickets with QR code
+- Email / PDF tickets
+- Camera-based QR scanning on the Verify page
 - Unit and integration tests
