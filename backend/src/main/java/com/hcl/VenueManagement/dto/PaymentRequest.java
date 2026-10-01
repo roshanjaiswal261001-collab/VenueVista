@@ -12,7 +12,7 @@ public record PaymentRequest(
         Long userId,
 
         @NotBlank(message = "Payment method is required")
-        @Pattern(regexp = "UPI|CARD|NET_BANKING", message = "Method must be UPI, CARD or NET_BANKING")
+        @Pattern(regexp = "UPI|CARD|CASH|NET_BANKING", message = "Method must be UPI, CARD or CASH")
         String paymentMethod
 ) {
 }

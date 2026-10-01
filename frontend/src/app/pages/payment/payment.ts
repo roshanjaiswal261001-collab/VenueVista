@@ -131,15 +131,19 @@ export class Payment implements OnInit, OnDestroy {
           && /^\d{3}$/.test(this.cardCvv.trim());
       case 'NET_BANKING':
         return !!this.bank;
+      default:
+        return true;
     }
+  }
+
+  // Ek click: method set karo aur pay karo
+  payWith(method: PaymentMethod): void {
+    this.method = method;
+    this.pay();
   }
 
   pay(): void {
     if (!this.user || !this.booking || this.expired) {
-      return;
-    }
-    if (!this.detailsValid) {
-      this.errorMessage = 'Please enter valid payment details.';
       return;
     }
 

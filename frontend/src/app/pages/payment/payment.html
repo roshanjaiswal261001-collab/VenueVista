@@ -78,61 +78,27 @@
             </div>
 
             <h2>Choose payment method</h2>
+            <p class="amount-line">Amount to pay: <strong>₹{{ booking.totalAmount | number: '1.0-2' }}</strong></p>
 
-            <div class="method-tabs">
-              <button
-                type="button"
-                *ngFor="let m of methods"
-                [class.active]="method === m.value"
-                (click)="method = m.value; errorMessage = ''"
-              >
-                {{ m.label }}
+            <div class="pay-buttons">
+              <button type="button" class="pay-option" [disabled]="paying" (click)="payWith('UPI')">
+                <span class="pay-icon">📱</span>
+                <span>UPI</span>
+              </button>
+              <button type="button" class="pay-option" [disabled]="paying" (click)="payWith('CARD')">
+                <span class="pay-icon">💳</span>
+                <span>Card</span>
+              </button>
+              <button type="button" class="pay-option" [disabled]="paying" (click)="payWith('CASH')">
+                <span class="pay-icon">💵</span>
+                <span>Cash</span>
               </button>
             </div>
 
-            <!-- UPI -->
-            <div class="fields" *ngIf="method === 'UPI'">
-              <label for="upi">UPI ID</label>
-              <input id="upi" name="upi" placeholder="yourname@okaxis" [(ngModel)]="upiId" />
-            </div>
-
-            <!-- CARD -->
-            <div class="fields" *ngIf="method === 'CARD'">
-              <label for="cardNumber">Card Number</label>
-              <input id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" [(ngModel)]="cardNumber" />
-              <div class="row">
-                <div>
-                  <label for="expiry">Expiry (MM/YY)</label>
-                  <input id="expiry" name="expiry" placeholder="08/28" maxlength="5" [(ngModel)]="cardExpiry" />
-                </div>
-                <div>
-                  <label for="cvv">CVV</label>
-                  <input id="cvv" name="cvv" type="password" placeholder="123" maxlength="3" [(ngModel)]="cardCvv" />
-                </div>
-              </div>
-            </div>
-
-            <!-- NET BANKING -->
-            <div class="fields" *ngIf="method === 'NET_BANKING'">
-              <label for="bank">Select Bank</label>
-              <select id="bank" name="bank" [(ngModel)]="bank">
-                <option value="" disabled>Choose your bank</option>
-                <option *ngFor="let b of banks" [value]="b">{{ b }}</option>
-              </select>
-            </div>
-
+            <p class="processing" *ngIf="paying">Processing {{ method }} payment...</p>
             <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-            <button
-              type="button"
-              class="primary-btn full"
-              [disabled]="paying || !detailsValid"
-              (click)="pay()"
-            >
-              {{ paying ? 'Processing...' : 'Pay ₹' + (booking.totalAmount | number: '1.0-2') }}
-            </button>
-
-            <p class="demo-note">🔒 Demo payment: no real money is charged and card details are never sent to the server.</p>
+            <p class="demo-note">🔒 Demo payment: no real money is charged.</p>
           </section>
 
           <aside class="card summary">

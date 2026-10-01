@@ -43,7 +43,7 @@ export interface BookingResponse {
   tickets: TicketInfo[];
 }
 
-export type PaymentMethod = 'UPI' | 'CARD' | 'NET_BANKING';
+export type PaymentMethod = 'UPI' | 'CARD' | 'CASH' | 'NET_BANKING';
 
 export interface PaymentRequest { bookingId: number; userId: number; paymentMethod: PaymentMethod; }
 
