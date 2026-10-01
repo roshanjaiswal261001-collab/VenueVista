@@ -27,7 +27,7 @@
       <p class="subtitle">Create and manage events at your venues</p>
 
       <!-- Add Event Form -->
-      <section class="form-card">
+      <section class="form-card" *ngIf="isAdmin">
         <h2>Add New Event</h2>
 
         <form (ngSubmit)="addEvent()" class="event-form">
@@ -128,7 +128,7 @@
                 Book Now
               </a>
 
-              <button type="button" class="delete-btn" (click)="deleteEvent(event)">
+              <button type="button" class="delete-btn" *ngIf="isAdmin" (click)="deleteEvent(event)">
                 Delete
               </button>
             </div>

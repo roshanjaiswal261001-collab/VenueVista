@@ -26,7 +26,7 @@
       <p class="subtitle">Add and manage your venues</p>
 
       <!-- Add Venue Form -->
-      <section class="form-card">
+      <section class="form-card" *ngIf="isAdmin">
         <h2>Add New Venue</h2>
 
         <form (ngSubmit)="addVenue()" class="venue-form">
@@ -90,7 +90,7 @@
             <p><strong>Location:</strong> {{ venue.location }}</p>
             <p><strong>Capacity:</strong> {{ venue.capacity }}</p>
 
-            <button type="button" class="delete-btn" (click)="deleteVenue(venue)">
+            <button type="button" class="delete-btn" *ngIf="isAdmin" (click)="deleteVenue(venue)">
               Delete
             </button>
           </div>

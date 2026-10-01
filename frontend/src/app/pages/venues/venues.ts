@@ -121,6 +121,10 @@ export class Venues implements OnInit {
     });
   }
 
+  get isAdmin(): boolean {
+    return this.user?.role === 'ADMIN';
+  }
+
   logout(): void {
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
