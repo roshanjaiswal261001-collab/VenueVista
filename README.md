@@ -62,8 +62,8 @@ Select seats --> PENDING_PAYMENT --(pay within 10 min)--> CONFIRMED
 
 ~~~
 VenueVista/
-├── backend/    Spring Boot API  (controller → service → repository → entity, dto)
-└── frontend/   Angular app      (pages/, services/api.ts)
+├── auth-backend/  Spring Boot API  (controller → service → repository → entity, dto)
+└── angular-auth/  Angular app      (pages/, services/api.ts)
 ~~~
 
 ---
@@ -77,7 +77,7 @@ VenueVista/
 **2. Backend**
 
 ~~~bash
-cd backend
+cd auth-backend
 # set your MySQL username/password in src/main/resources/application.properties
 ./mvnw spring-boot:run
 ~~~
@@ -87,7 +87,7 @@ API runs on `http://localhost:8080`. Swagger UI: `http://localhost:8080/swagger-
 **3. Frontend**
 
 ~~~bash
-cd frontend
+cd angular-auth
 npm install
 npm start
 ~~~
