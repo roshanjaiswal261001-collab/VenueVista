@@ -97,32 +97,10 @@
           No events yet. Add your first event above.
         </p>
 
-        <div class="filter-bar" *ngIf="!loading && events.length > 0">
-          <input class="search" type="search"
-                 placeholder="🔍  Search events, venues or cities..."
-                 [(ngModel)]="searchText" />
-          <div class="chips">
-            <button type="button" class="chip"
-                    *ngFor="let c of categoryChips"
-                    [class.active]="selectedCategory === c"
-                    (click)="selectedCategory = c">
-              {{ c }}
-            </button>
-          </div>
-        </div>
-
-        <p class="no-match" *ngIf="!loading && events.length > 0 && filteredEvents.length === 0">
-          No events match your search.
-        </p>
-
         <div class="event-list" *ngIf="!loading && events.length > 0">
-          <div class="event-card" *ngFor="let event of filteredEvents">
+          <div class="event-card" *ngFor="let event of events">
 
-            <div class="poster" [style.background]="posterFor(event.category).bg">
-              <span class="poster-emoji">{{ posterFor(event.category).emoji }}</span>
-              <span class="badge on-poster">{{ event.category }}</span>
-              <span class="past-tag" *ngIf="isPast(event)">Ended</span>
-            </div>
+            <span class="badge">{{ event.category }}</span>
 
             <h3>{{ event.name }}</h3>
 
