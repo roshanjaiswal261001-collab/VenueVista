@@ -156,6 +156,42 @@ export class Events implements OnInit {
     });
   }
 
+  // ---------- Search + filter + posters ----------
+  searchText = '';
+  selectedCategory = 'All';
+
+  private readonly posters: Record<string, { emoji: string; bg: string }> = {
+    Concert:    { emoji: '🎤', bg: 'linear-gradient(135deg, #6a3093, #c1467f)' },
+    Comedy:     { emoji: '😂', bg: 'linear-gradient(135deg, #f7971e, #ffd200)' },
+    Conference: { emoji: '🎙️', bg: 'linear-gradient(135deg, #1e3c72, #2a5298)' },
+    Technology: { emoji: '💻', bg: 'linear-gradient(135deg, #0f2027, #2c5364)' },
+    Wedding:    { emoji: '💍', bg: 'linear-gradient(135deg, #b76e79, #e8c4a0)' },
+    Sports:     { emoji: '🏏', bg: 'linear-gradient(135deg, #11998e, #38ef7d)' },
+    Workshop:   { emoji: '🛠️', bg: 'linear-gradient(135deg, #136a8a, #267871)' }
+  };
+
+  posterFor(category: string): { emoji: string; bg: string } {
+    return this.posters[category] ?? { emoji: '🎉', bg: 'linear-gradient(135deg, #2b211c, #b8893f)' };
+  }
+
+  get categoryChips(): string[] {
+    const set = new Set(this.events.map(e => e.category).filter(Boolean));
+    return ['All', ...Array.from(set).sort()];
+  }
+
+  get filteredEvents(): VenueEvent[] {
+    const q = this.searchText.trim().toLowerCase();
+    return this.events
+      .filter(e => this.selectedCategory === 'All' || e.category === this.selectedCategory)
+      .filter(e => !q || [e.name, e.description, e.category, e.venue?.name, e.venue?.location]
+        .some(v => (v ?? '').toLowerCase().includes(q)))
+      .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime());
+  }
+
+  isPast(event: VenueEvent): boolean {
+    return !!event.eventDate && new Date(event.eventDate) < new Date();
+  }
+
   get isAdmin(): boolean {
     return this.user?.role === 'ADMIN';
   }

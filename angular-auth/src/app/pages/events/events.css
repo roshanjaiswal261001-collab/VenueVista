@@ -271,3 +271,20 @@
 .book-btn:hover {
   background: #b8893f;
 }
+/* ---------- Search + filter ---------- */
+.filter-bar { display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; }
+.search { padding: 14px 18px; border: 1px solid #d8cfc5; border-radius: 12px; font-size: 16px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+.search:focus { outline: none; border-color: #b8893f; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 8px 16px; border-radius: 20px; border: 1px solid #d8cfc5; background: #fff; cursor: pointer; font-weight: 600; color: #4a4039; transition: all .15s; }
+.chip:hover { border-color: #b8893f; color: #b8893f; }
+.chip.active { background: #2b211c; border-color: #2b211c; color: #fff; }
+.no-match { color: #8a7f76; text-align: center; padding: 30px; }
+
+/* ---------- Poster on event card ---------- */
+.event-card { position: relative; overflow: hidden; transition: transform .15s, box-shadow .15s; }
+.event-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }
+.poster { position: relative; margin: -20px -20px 14px; height: 140px; display: flex; align-items: center; justify-content: center; }
+.poster-emoji { font-size: 60px; filter: drop-shadow(0 4px 8px rgba(0,0,0,.25)); }
+.badge.on-poster { position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,.92); }
+.past-tag { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,.6); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; letter-spacing: 1px; }
