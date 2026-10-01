@@ -93,6 +93,44 @@
             <button type="button" class="delete-btn" *ngIf="isAdmin" (click)="deleteVenue(venue)">
               Delete
             </button>
+
+            <div class="seat-gen" *ngIf="isAdmin">
+              <button type="button" class="gen-toggle"
+                      *ngIf="openGeneratorId !== venue.id"
+                      (click)="openGenerator(venue)">
+                🪑 Generate Seats
+              </button>
+
+              <div class="gen-form" *ngIf="openGeneratorId === venue.id">
+                <div class="gen-fields">
+                  <label>Rows
+                    <input type="number" min="1" max="26" [(ngModel)]="seatForm.rows" />
+                  </label>
+                  <label>Seats / row
+                    <input type="number" min="1" max="50" [(ngModel)]="seatForm.seatsPerRow" />
+                  </label>
+                  <label>VIP rows
+                    <input type="number" min="0" [(ngModel)]="seatForm.vipRows" />
+                  </label>
+                </div>
+
+                <p class="gen-total"
+                   [class.over]="seatForm.rows * seatForm.seatsPerRow > venue.capacity">
+                  Total: {{ seatForm.rows * seatForm.seatsPerRow }} / {{ venue.capacity }} seats
+                </p>
+
+                <div class="gen-actions">
+                  <button type="button" class="primary-btn small"
+                          [disabled]="generating"
+                          (click)="generateSeats(venue)">
+                    {{ generating ? 'Creating...' : 'Create' }}
+                  </button>
+                  <button type="button" class="link-btn" (click)="openGeneratorId = null">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

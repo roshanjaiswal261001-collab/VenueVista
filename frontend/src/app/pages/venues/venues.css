@@ -206,3 +206,15 @@
   background: #c62828;
   color: #ffffff;
 }
+/* Seat generator */
+.seat-gen { margin-top: 14px; border-top: 1px dashed #e6dfd6; padding-top: 12px; }
+.gen-toggle { background: #fbf5ea; color: #b8893f; border: 1px solid #b8893f; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.gen-toggle:hover { background: #b8893f; color: #fff; }
+.gen-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.gen-fields label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #6f655d; }
+.gen-fields input { padding: 8px; border: 1px solid #d8cfc5; border-radius: 6px; font-size: 14px; width: 100%; box-sizing: border-box; }
+.gen-total { font-size: 13px; color: #6f655d; margin: 10px 0; }
+.gen-total.over { color: #c62828; font-weight: 700; }
+.gen-actions { display: flex; gap: 10px; align-items: center; }
+.primary-btn.small { padding: 8px 16px; font-size: 14px; }
+.link-btn { background: none; border: none; color: #8a7f76; cursor: pointer; text-decoration: underline; }

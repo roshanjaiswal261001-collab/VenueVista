@@ -19,6 +19,12 @@ export class Venues implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  // Seat generator (admin)
+  openGeneratorId: number | null = null;
+  generating = false;
+  seatForm = { rows: 5, seatsPerRow: 10, vipRows: 1 };
+
+
   newVenue = {
     name: '',
     location: '',
@@ -116,6 +122,53 @@ export class Venues implements OnInit {
         console.error('Delete venue error:', error);
         this.errorMessage = 'Could not delete venue. It may be linked to events.';
         this.successMessage = '';
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  openGenerator(venue: Venue): void {
+    const seatsPerRow = Math.min(10, venue.capacity);
+    const rows = Math.max(1, Math.min(5, Math.floor(venue.capacity / seatsPerRow)));
+    this.seatForm = { rows, seatsPerRow, vipRows: rows > 1 ? 1 : 0 };
+    this.openGeneratorId = venue.id;
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  generateSeats(venue: Venue): void {
+    const { rows, seatsPerRow, vipRows } = this.seatForm;
+
+    if (rows < 1 || rows > 26 || seatsPerRow < 1 || seatsPerRow > 50) {
+      this.errorMessage = 'Rows must be 1-26 and seats per row 1-50.';
+      return;
+    }
+    if (vipRows < 0 || vipRows > rows) {
+      this.errorMessage = 'VIP rows must be between 0 and total rows.';
+      return;
+    }
+    if (rows * seatsPerRow > venue.capacity) {
+      this.errorMessage = `Total seats (${rows * seatsPerRow}) exceed capacity (${venue.capacity}).`;
+      return;
+    }
+
+    this.generating = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.api.generateSeats(venue.id, rows, seatsPerRow, vipRows).subscribe({
+      next: (seats) => {
+        this.generating = false;
+        this.openGeneratorId = null;
+        this.successMessage = `${seats.length} seats created for "${venue.name}".`;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Generate seats error:', error);
+        this.generating = false;
+        this.errorMessage = error?.status === 409
+          ? `Seats already exist for "${venue.name}".`
+          : (error?.error?.message || 'Could not generate seats. Please try again.');
         this.cdr.markForCheck();
       }
     });
