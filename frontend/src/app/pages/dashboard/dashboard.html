@@ -7,15 +7,8 @@
     </div>
 
     <div class="user-section">
-
-      <span *ngIf="user">
-        {{ user.name }}
-      </span>
-
-      <button type="button" (click)="logout()">
-        Logout
-      </button>
-
+      <span *ngIf="user">{{ user.name }}</span>
+      <button type="button" (click)="logout()">Logout</button>
     </div>
 
   </header>
@@ -24,21 +17,11 @@
   <div class="dashboard-body">
 
     <aside class="sidebar">
-
       <h3>Menu</h3>
-
-      <a routerLink="/dashboard" aria-current="page">
-        Dashboard
-      </a>
-
-      <a routerLink="/venues">
-        Venues
-      </a>
-
-      <a routerLink="/events">
-        Events
-      </a>
-
+      <a routerLink="/dashboard" aria-current="page">Dashboard</a>
+      <a routerLink="/venues">Venues</a>
+      <a routerLink="/events">Events</a>
+      <a routerLink="/my-bookings">My Bookings</a>
     </aside>
 
 
@@ -48,72 +31,72 @@
 
       <p class="welcome">
         Welcome back,
-        <strong *ngIf="user">
-          {{ user.name }}
-        </strong>
+        <strong *ngIf="user">{{ user.name }}</strong>
+      </p>
+
+      <p class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+        <button type="button" class="retry-button" (click)="loadData()">
+          Try again
+        </button>
       </p>
 
 
       <div class="cards">
 
-        <div class="card">
+        <a class="card" routerLink="/venues">
           <h3>Total Venues</h3>
-          <p>{{ venues.length }}</p>
-        </div>
+          <p>{{ loading ? '…' : venues.length }}</p>
+        </a>
 
-        <div class="card">
-          <h3>Venues Listed</h3>
-          <p>{{ venues.length }}</p>
-        </div>
+        <a class="card" routerLink="/events">
+          <h3>Total Events</h3>
+          <p>{{ loading ? '…' : events.length }}</p>
+        </a>
 
-        <div class="card">
-          <h3>Bookings</h3>
-          <p>0</p>
-        </div>
+        <a class="card" routerLink="/my-bookings">
+          <h3>My Active Bookings</h3>
+          <p>{{ loading ? '…' : activeBookings }}</p>
+        </a>
 
       </div>
 
 
       <div class="recent-section">
 
-        <h2 id="venues">Venues</h2>
+        <h2>Upcoming Events</h2>
 
-        <p *ngIf="loading">
-          Loading venues...
+        <p *ngIf="loading">Loading events...</p>
+
+        <p *ngIf="!loading && !errorMessage && upcomingEvents.length === 0">
+          No upcoming events.
+          <a routerLink="/events">Create one</a>
         </p>
 
-        <p class="error-message" *ngIf="errorMessage">
-          {{ errorMessage }}
-          <button type="button" class="retry-button" (click)="loadVenues()">
-            Try again
-          </button>
-        </p>
+        <div class="venue-list" *ngIf="!loading && upcomingEvents.length > 0">
 
-        <p *ngIf="!loading && !errorMessage && venues.length === 0">
-          No venues available.
-        </p>
+          <div class="venue-card" *ngFor="let event of upcomingEvents">
 
-
-        <div class="venue-list" *ngIf="!loading && venues.length > 0">
-
-          <div
-            class="venue-card"
-            *ngFor="let venue of venues"
-          >
-
-            <h3>
-              {{ venue.name }}
-            </h3>
+            <h3>{{ event.name }}</h3>
 
             <p>
-              <strong>Location:</strong>
-              {{ venue.location }}
+              <strong>Date:</strong>
+              {{ event.eventDate | date: 'd MMM y, h:mm a' }}
             </p>
 
             <p>
-              <strong>Capacity:</strong>
-              {{ venue.capacity }}
+              <strong>Venue:</strong>
+              {{ event.venue?.name || 'Not assigned' }}
             </p>
+
+            <p>
+              <strong>Price:</strong>
+              ₹{{ event.ticketPrice | number: '1.0-2' }}
+            </p>
+
+            <a class="book-link" [routerLink]="['/book', event.id]">
+              Book Now →
+            </a>
 
           </div>
 

@@ -64,3 +64,26 @@ button { cursor: pointer; }
   .main-content { padding: 26px 18px; }
   .cards { grid-template-columns: 1fr; }
 }
+/* Cards ab clickable links hain */
+a.card {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s;
+}
+
+a.card:hover {
+  transform: translateY(-3px);
+}
+
+/* Upcoming event pe Book Now link */
+.book-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #b8893f;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.book-link:hover {
+  text-decoration: underline;
+}
