@@ -15,7 +15,8 @@ Built with **Spring Boot + MySQL** (backend) and **Angular** (frontend).
 - Seats are **held for 10 minutes** while paying; unpaid holds expire automatically
 - One-click demo payment: UPI, Card or Cash
 - QR code e-ticket for every seat (shown after payment and in My Bookings)
-- My Bookings: tickets, status, cancel (refund marked on payment)
+- Book an entire venue for a day (wedding, party, conference): date, guests, purpose; blocked if the venue already has a booking or an event that day
+- My Bookings: event tickets + venue bookings, status, cancel (refund marked on payment)
 
 **Admins**
 - Add / delete venues
@@ -117,6 +118,8 @@ UPDATE users SET role = 'ADMIN' WHERE email = 'you@example.com';
 | GET | `/api/bookings/user/{userId}` | A user's bookings |
 | PUT | `/api/bookings/{id}/cancel?userId=` | Cancel booking |
 | POST | `/api/payments/pay` | Pay for a booking → `CONFIRMED` |
+| POST | `/api/venue-bookings` | Book a whole venue for a date |
+| GET | `/api/venue-bookings/user/{userId}` | A user's venue bookings |
 | GET | `/api/tickets/verify/{code}` | Check a ticket at the gate |
 | POST | `/api/tickets/verify/{code}/check-in` | Mark ticket as USED (entry allowed) |
 
