@@ -35,12 +35,17 @@ export interface BookingResponse {
   status: string;
   totalAmount: number;
   bookingDate: string;
+  holdExpiresAt: string | null;
   eventId: number;
   eventName: string;
   eventDate: string;
   venueName: string | null;
   tickets: TicketInfo[];
 }
+
+export type PaymentMethod = 'UPI' | 'CARD' | 'NET_BANKING';
+
+export interface PaymentRequest { bookingId: number; userId: number; paymentMethod: PaymentMethod; }
 
 const API_BASE_URL = '/api';
 
@@ -97,11 +102,20 @@ export class Api {
   bookSeats(request: BookingRequest): Observable<BookingResponse> {
     return this.http.post<BookingResponse>(`${API_BASE_URL}/bookings/book`, request);
   }
+  getBookingDetails(bookingId: number, userId: number): Observable<BookingResponse> {
+    return this.http.get<BookingResponse>(`${API_BASE_URL}/bookings/${bookingId}/details`,
+      { params: { userId } });
+  }
   getMyBookings(userId: number): Observable<BookingResponse[]> {
     return this.http.get<BookingResponse[]>(`${API_BASE_URL}/bookings/user/${userId}`);
   }
   cancelBooking(bookingId: number, userId: number): Observable<BookingResponse> {
     return this.http.put<BookingResponse>(`${API_BASE_URL}/bookings/${bookingId}/cancel`, null,
       { params: { userId } });
+  }
+
+  // Payments
+  payForBooking(request: PaymentRequest): Observable<BookingResponse> {
+    return this.http.post<BookingResponse>(`${API_BASE_URL}/payments/pay`, request);
   }
 }

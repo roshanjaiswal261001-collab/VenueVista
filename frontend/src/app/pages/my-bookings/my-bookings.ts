@@ -74,7 +74,7 @@ export class MyBookings implements OnInit {
 
   // Sirf future events ki confirmed booking cancel ho sakti hai
   canCancel(booking: BookingResponse): boolean {
-    if (booking.status !== 'CONFIRMED') {
+    if (booking.status !== 'CONFIRMED' && booking.status !== 'PENDING_PAYMENT') {
       return false;
     }
     return !booking.eventDate || new Date(booking.eventDate) > new Date();

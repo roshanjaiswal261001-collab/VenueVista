@@ -178,9 +178,7 @@ export class BookEvent implements OnInit {
     }).subscribe({
       next: (response) => {
         this.booking = false;
-        this.confirmedBooking = response;
-        this.selectedSeatIds.clear();
-        this.cdr.markForCheck();
+        this.router.navigate(['/payment', response.bookingId]);
       },
       error: (error) => {
         console.error('Booking error:', error);

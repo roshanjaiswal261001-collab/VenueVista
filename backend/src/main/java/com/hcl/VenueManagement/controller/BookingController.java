@@ -20,26 +20,29 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    // Naya safe booking: frontend sirf userId, eventId, seatIds bhejta hai
+    // Seats hold karo (PENDING_PAYMENT)
     @PostMapping("/book")
     @ResponseStatus(HttpStatus.CREATED)
     public BookingResponse book(@Valid @RequestBody BookingRequest request) {
         return bookingService.createBooking(request);
     }
 
-    // Ek user ki saari bookings
+    // Ek booking ki details (payment page ke liye)
+    @GetMapping("/{id}/details")
+    public BookingResponse details(@PathVariable Long id, @RequestParam Long userId) {
+        return bookingService.getBookingDetails(id, userId);
+    }
+
     @GetMapping("/user/{userId}")
     public List<BookingResponse> getUserBookings(@PathVariable Long userId) {
         return bookingService.getBookingsForUser(userId);
     }
 
-    // Kisi event ki booked seats (seat map pe grey dikhane ke liye)
     @GetMapping("/event/{eventId}/booked-seats")
     public List<Long> getBookedSeats(@PathVariable Long eventId) {
         return bookingService.getBookedSeatIds(eventId);
     }
 
-    // Booking cancel karna
     @PutMapping("/{id}/cancel")
     public BookingResponse cancel(@PathVariable Long id, @RequestParam Long userId) {
         return bookingService.cancelBooking(id, userId);

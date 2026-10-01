@@ -62,6 +62,14 @@ export const routes: Routes = [
       import('./pages/my-bookings/my-bookings').then(
         m => m.MyBookings
       )
+  },
+
+  {
+    path: 'payment/:bookingId',
+    loadComponent: () =>
+      import('./pages/payment/payment').then(
+        m => m.Payment
+      )
   }
 
 ];

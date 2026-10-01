@@ -77,6 +77,7 @@
               class="status"
               [class.confirmed]="b.status === 'CONFIRMED'"
               [class.cancelled-badge]="b.status === 'CANCELLED'"
+              [class.pending]="b.status === 'PENDING_PAYMENT'"
             >
               {{ b.status }}
             </span>
@@ -97,6 +98,8 @@
 
             <div class="booking-actions">
               <p class="amount">₹{{ b.totalAmount | number: '1.0-2' }}</p>
+
+              <a class="pay-btn" *ngIf="b.status === 'PENDING_PAYMENT'" [routerLink]="['/payment', b.bookingId]">Pay Now</a>
 
               <button
                 type="button"

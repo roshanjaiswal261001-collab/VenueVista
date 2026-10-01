@@ -8,6 +8,7 @@ public record BookingResponse(
         String status,
         double totalAmount,
         LocalDateTime bookingDate,
+        LocalDateTime holdExpiresAt,
         Long eventId,
         String eventName,
         LocalDateTime eventDate,

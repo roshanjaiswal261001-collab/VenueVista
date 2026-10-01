@@ -290,3 +290,7 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+/* Pending payment */
+.status.pending { background: #fbf5ea; color: #b8893f; }
+.pay-btn { background: #2b211c; color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+.pay-btn:hover { background: #b8893f; }

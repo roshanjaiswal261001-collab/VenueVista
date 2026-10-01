@@ -1,0 +1,162 @@
+<div class="page">
+
+  <header class="navbar">
+    <div class="brand"><span>Venue</span>Vista</div>
+    <div class="user-section">
+      <span *ngIf="user">{{ user.name }}</span>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <aside class="sidebar">
+      <h3>Menu</h3>
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/venues">Venues</a>
+      <a routerLink="/events">Events</a>
+      <a routerLink="/my-bookings" class="active">My Bookings</a>
+    </aside>
+
+    <main class="main-content">
+
+      <p *ngIf="loading">Loading booking...</p>
+
+      <p class="error-message" *ngIf="!loading && !booking && errorMessage">{{ errorMessage }}</p>
+
+      <ng-container *ngIf="booking">
+
+        <!-- ===== CONFIRMED ===== -->
+        <section class="center-card" *ngIf="booking.status === 'CONFIRMED'">
+          <div class="tick">✓</div>
+          <h1>Payment Successful!</h1>
+          <p class="subtitle">
+            Booking #{{ booking.bookingId }} for <strong>{{ booking.eventName }}</strong> is confirmed.
+          </p>
+
+          <div class="ticket-list">
+            <div class="ticket" *ngFor="let t of booking.tickets">
+              <div>
+                <p class="ticket-seat">Seat {{ t.seat }}</p>
+                <p class="ticket-number">{{ t.ticketNumber }}</p>
+              </div>
+              <div class="ticket-right">
+                <span class="seat-type">{{ t.seatType }}</span>
+                <p class="ticket-price">₹{{ t.price | number: '1.0-2' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="total-line">Total paid: <strong>₹{{ booking.totalAmount | number: '1.0-2' }}</strong></p>
+
+          <div class="actions">
+            <a routerLink="/my-bookings" class="primary-btn">View My Bookings</a>
+            <a routerLink="/events" class="secondary-btn">Book Another Event</a>
+          </div>
+        </section>
+
+        <!-- ===== EXPIRED / CANCELLED ===== -->
+        <section class="center-card" *ngIf="booking.status === 'CANCELLED' || (booking.status === 'PENDING_PAYMENT' && expired)">
+          <div class="tick cross">!</div>
+          <h1>{{ expired ? 'Seat hold expired' : 'Booking cancelled' }}</h1>
+          <p class="subtitle">
+            {{ expired ? 'You did not complete payment in time, so the seats were released.' : 'This booking is no longer active.' }}
+          </p>
+          <div class="actions">
+            <a [routerLink]="['/book', booking.eventId]" class="primary-btn">Book Again</a>
+            <a routerLink="/my-bookings" class="secondary-btn">My Bookings</a>
+          </div>
+        </section>
+
+        <!-- ===== PAY NOW ===== -->
+        <div class="pay-layout" *ngIf="booking.status === 'PENDING_PAYMENT' && !expired">
+
+          <section class="card">
+            <div class="timer" [class.urgent]="secondsLeft < 60">
+              ⏱ Seats held for <strong>{{ timeLeft }}</strong>
+            </div>
+
+            <h2>Choose payment method</h2>
+
+            <div class="method-tabs">
+              <button
+                type="button"
+                *ngFor="let m of methods"
+                [class.active]="method === m.value"
+                (click)="method = m.value; errorMessage = ''"
+              >
+                {{ m.label }}
+              </button>
+            </div>
+
+            <!-- UPI -->
+            <div class="fields" *ngIf="method === 'UPI'">
+              <label for="upi">UPI ID</label>
+              <input id="upi" name="upi" placeholder="yourname@okaxis" [(ngModel)]="upiId" />
+            </div>
+
+            <!-- CARD -->
+            <div class="fields" *ngIf="method === 'CARD'">
+              <label for="cardNumber">Card Number</label>
+              <input id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" [(ngModel)]="cardNumber" />
+              <div class="row">
+                <div>
+                  <label for="expiry">Expiry (MM/YY)</label>
+                  <input id="expiry" name="expiry" placeholder="08/28" maxlength="5" [(ngModel)]="cardExpiry" />
+                </div>
+                <div>
+                  <label for="cvv">CVV</label>
+                  <input id="cvv" name="cvv" type="password" placeholder="123" maxlength="3" [(ngModel)]="cardCvv" />
+                </div>
+              </div>
+            </div>
+
+            <!-- NET BANKING -->
+            <div class="fields" *ngIf="method === 'NET_BANKING'">
+              <label for="bank">Select Bank</label>
+              <select id="bank" name="bank" [(ngModel)]="bank">
+                <option value="" disabled>Choose your bank</option>
+                <option *ngFor="let b of banks" [value]="b">{{ b }}</option>
+              </select>
+            </div>
+
+            <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+            <button
+              type="button"
+              class="primary-btn full"
+              [disabled]="paying || !detailsValid"
+              (click)="pay()"
+            >
+              {{ paying ? 'Processing...' : 'Pay ₹' + (booking.totalAmount | number: '1.0-2') }}
+            </button>
+
+            <p class="demo-note">🔒 Demo payment: no real money is charged and card details are never sent to the server.</p>
+          </section>
+
+          <aside class="card summary">
+            <h2>Order Summary</h2>
+            <p class="event-name">{{ booking.eventName }}</p>
+            <p class="muted">{{ booking.eventDate | date: 'EEE, d MMM y, h:mm a' }}</p>
+            <p class="muted" *ngIf="booking.venueName">{{ booking.venueName }}</p>
+
+            <div class="chips">
+              <span class="chip" *ngFor="let t of booking.tickets">{{ t.seat }}</span>
+            </div>
+
+            <div class="line">
+              <span>{{ booking.tickets.length }} × ₹{{ booking.tickets[0]?.price | number: '1.0-2' }}</span>
+              <span>₹{{ booking.totalAmount | number: '1.0-2' }}</span>
+            </div>
+            <div class="line total">
+              <span>Total</span>
+              <span>₹{{ booking.totalAmount | number: '1.0-2' }}</span>
+            </div>
+          </aside>
+
+        </div>
+      </ng-container>
+
+    </main>
+  </div>
+</div>

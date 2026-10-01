@@ -1,7 +1,11 @@
 package com.hcl.VenueManagement.controller;
 
+import com.hcl.VenueManagement.dto.BookingResponse;
+import com.hcl.VenueManagement.dto.PaymentRequest;
 import com.hcl.VenueManagement.entity.Payment;
+import com.hcl.VenueManagement.service.BookingService;
 import com.hcl.VenueManagement.service.PaymentService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,14 +15,17 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    private final BookingService bookingService;
 
-    public PaymentController(PaymentService paymentService) {
+    public PaymentController(PaymentService paymentService, BookingService bookingService) {
         this.paymentService = paymentService;
+        this.bookingService = bookingService;
     }
 
-    @PostMapping
-    public Payment addPayment(@RequestBody Payment payment) {
-        return paymentService.addPayment(payment);
+    // Booking ka payment karo -> booking CONFIRMED
+    @PostMapping("/pay")
+    public BookingResponse pay(@Valid @RequestBody PaymentRequest request) {
+        return bookingService.payForBooking(request);
     }
 
     @GetMapping
@@ -29,10 +36,5 @@ public class PaymentController {
     @GetMapping("/{id}")
     public Payment getPaymentById(@PathVariable Long id) {
         return paymentService.getPaymentById(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deletePayment(@PathVariable Long id) {
-        paymentService.deletePayment(id);
     }
 }
