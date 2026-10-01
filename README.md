@@ -1,5 +1,7 @@
 # 🎟️ VenueVista: Event Ticketing & Venue Management
 
+![CI](https://github.com/roshanjaiswal261001-collab/VenueVista/actions/workflows/ci.yml/badge.svg)
+
 A full-stack web app where admins manage venues and events, and customers pick seats on a live seat map, pay, and get tickets.
 
 Built with **Spring Boot + MySQL** (backend) and **Angular** (frontend).
