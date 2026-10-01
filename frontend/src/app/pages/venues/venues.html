@@ -94,6 +94,38 @@
               Delete
             </button>
 
+            <div class="venue-book" *ngIf="!isAdmin">
+              <button type="button" class="book-venue-btn"
+                      *ngIf="bookingVenueId !== venue.id"
+                      (click)="openVenueBooking(venue)">
+                Book this Venue
+              </button>
+
+              <div class="vb-form" *ngIf="bookingVenueId === venue.id">
+                <label>Date
+                  <input type="date" [min]="minDate" [(ngModel)]="venueForm.date" />
+                </label>
+                <label>Guests
+                  <input type="number" min="1" [max]="venue.capacity" [(ngModel)]="venueForm.guests" />
+                </label>
+                <label>Purpose
+                  <select [(ngModel)]="venueForm.purpose">
+                    <option *ngFor="let p of purposes" [value]="p">{{ p }}</option>
+                  </select>
+                </label>
+
+                <p class="vb-price">Rent: <strong>₹{{ venue.capacity * RENT_PER_SEAT | number }}</strong> per day</p>
+
+                <div class="vb-pay">
+                  <button type="button" [disabled]="bookingInProgress" (click)="bookVenue(venue, 'UPI')">📱 UPI</button>
+                  <button type="button" [disabled]="bookingInProgress" (click)="bookVenue(venue, 'CARD')">💳 Card</button>
+                  <button type="button" [disabled]="bookingInProgress" (click)="bookVenue(venue, 'CASH')">💵 Cash</button>
+                </div>
+
+                <button type="button" class="link-btn" (click)="bookingVenueId = null">Cancel</button>
+              </div>
+            </div>
+
             <div class="seat-gen" *ngIf="isAdmin">
               <button type="button" class="gen-toggle"
                       *ngIf="openGeneratorId !== venue.id"

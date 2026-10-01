@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Api, BookingResponse, User } from '../../services/api';
+import { Api, BookingResponse, User, VenueBookingResponse } from '../../services/api';
 import { TicketQr } from '../../shared/ticket-qr/ticket-qr';
 
 @Component({
@@ -19,6 +19,7 @@ export class MyBookings implements OnInit {
   errorMessage = '';
   successMessage = '';
   showQrFor: number | null = null;
+  venueBookings: VenueBookingResponse[] = [];
 
   constructor(
     private api: Api,
@@ -40,6 +41,7 @@ export class MyBookings implements OnInit {
       return;
     }
     this.loadBookings();
+    this.loadVenueBookings();
   }
 
   loadBookings(): void {
@@ -61,6 +63,19 @@ export class MyBookings implements OnInit {
         this.errorMessage = 'Unable to load your bookings. Please try again.';
         this.cdr.markForCheck();
       }
+    });
+  }
+
+  loadVenueBookings(): void {
+    if (!this.user) {
+      return;
+    }
+    this.api.getMyVenueBookings(this.user.id).subscribe({
+      next: (list) => {
+        this.venueBookings = list ?? [];
+        this.cdr.markForCheck();
+      },
+      error: (error) => console.error('Venue bookings error:', error)
     });
   }
 

@@ -129,6 +129,32 @@
         </div>
       </div>
 
+      <h2 class="section-title">My Venue Bookings</h2>
+
+      <p class="muted-text" *ngIf="venueBookings.length === 0">
+        No venue bookings yet. <a routerLink="/venues">Book a venue</a>
+      </p>
+
+      <div class="booking-list" *ngIf="venueBookings.length > 0">
+        <div class="booking-card" *ngFor="let vb of venueBookings">
+          <div class="booking-top">
+            <div>
+              <h3>{{ vb.venueName }}</h3>
+              <p class="meta">{{ vb.date | date: 'EEE, d MMM y' }} · {{ vb.location }}</p>
+            </div>
+            <span class="status confirmed">{{ vb.status }}</span>
+          </div>
+          <div class="booking-bottom">
+            <div class="booking-info">
+              <span>{{ vb.purpose }}</span>
+              <span>{{ vb.guests }} guests</span>
+              <span>Paid via {{ vb.paymentMethod }}</span>
+            </div>
+            <p class="amount">₹{{ vb.amount | number: '1.0-2' }}</p>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>

@@ -60,6 +60,27 @@ export interface TicketVerifyResponse {
   holderName: string;
 }
 
+export interface VenueBookingRequest {
+  venueId: number;
+  userId: number;
+  date: string;
+  guests: number;
+  purpose: string;
+  paymentMethod: PaymentMethod;
+}
+
+export interface VenueBookingResponse {
+  id: number;
+  venueName: string;
+  location: string;
+  date: string;
+  guests: number;
+  purpose: string;
+  amount: number;
+  paymentMethod: string;
+  status: string;
+}
+
 const API_BASE_URL = '/api';
 
 @Injectable({ providedIn: 'root' })
@@ -133,6 +154,14 @@ export class Api {
   }
   checkInTicket(code: string): Observable<TicketVerifyResponse> {
     return this.http.post<TicketVerifyResponse>(`${API_BASE_URL}/tickets/verify/${encodeURIComponent(code)}/check-in`, null);
+  }
+
+  // Venue bookings
+  bookVenue(request: VenueBookingRequest): Observable<VenueBookingResponse> {
+    return this.http.post<VenueBookingResponse>(`${API_BASE_URL}/venue-bookings`, request);
+  }
+  getMyVenueBookings(userId: number): Observable<VenueBookingResponse[]> {
+    return this.http.get<VenueBookingResponse[]>(`${API_BASE_URL}/venue-bookings/user/${userId}`);
   }
 
   // Payments

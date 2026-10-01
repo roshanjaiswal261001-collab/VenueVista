@@ -218,3 +218,17 @@
 .gen-actions { display: flex; gap: 10px; align-items: center; }
 .primary-btn.small { padding: 8px 16px; font-size: 14px; }
 .link-btn { background: none; border: none; color: #8a7f76; cursor: pointer; text-decoration: underline; }
+
+/* Venue booking (customer) */
+.venue-book { margin-top: 14px; border-top: 1px dashed #e6dfd6; padding-top: 12px; }
+.book-venue-btn { background: #2b211c; color: #fff; border: none; padding: 9px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.book-venue-btn:hover { background: #b8893f; }
+.vb-form { display: flex; flex-direction: column; gap: 8px; }
+.vb-form label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: #6f655d; }
+.vb-form input, .vb-form select { padding: 8px; border: 1px solid #d8cfc5; border-radius: 6px; font-size: 14px; font-family: inherit; }
+.vb-price { margin: 4px 0; color: #4a4039; }
+.vb-price strong { color: #b8893f; }
+.vb-pay { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.vb-pay button { padding: 10px 4px; border: 1px solid #d8cfc5; background: #fff; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.vb-pay button:hover:not(:disabled) { border-color: #b8893f; background: #fbf5ea; }
+.vb-pay button:disabled { opacity: .5; cursor: not-allowed; }

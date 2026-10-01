@@ -302,3 +302,6 @@
 .qr-seat { margin: 8px 0 2px; font-weight: 700; }
 .qr-code { margin: 0; font-family: monospace; font-size: 11px; color: #8a7f76; }
 .qr-btn { background: #fbf5ea; color: #b8893f; border: 1px solid #b8893f; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+.section-title { margin: 36px 0 14px; font-size: 24px; }
+.muted-text { color: #8a7f76; }

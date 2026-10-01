@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Api, User, Venue } from '../../services/api';
+import { Api, PaymentMethod, User, Venue } from '../../services/api';
 
 @Component({
   selector: 'app-venues',
@@ -125,6 +125,63 @@ export class Venues implements OnInit {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  // ---------- Venue booking (customer) ----------
+  bookingVenueId: number | null = null;
+  bookingInProgress = false;
+  venueForm = { date: '', guests: 50, purpose: 'Wedding' };
+  purposes = ['Wedding', 'Party', 'Conference', 'Birthday', 'Other'];
+  readonly RENT_PER_SEAT = 20;
+
+  get minDate(): string {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().slice(0, 10);
+  }
+
+  openVenueBooking(venue: Venue): void {
+    this.bookingVenueId = venue.id;
+    this.venueForm = { date: '', guests: Math.min(50, venue.capacity), purpose: 'Wedding' };
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  bookVenue(venue: Venue, method: PaymentMethod): void {
+    if (!this.user) {
+      return;
+    }
+    const { date, guests, purpose } = this.venueForm;
+    if (!date) {
+      this.errorMessage = 'Please choose a date.';
+      return;
+    }
+    if (guests < 1 || guests > venue.capacity) {
+      this.errorMessage = `Guests must be between 1 and ${venue.capacity}.`;
+      return;
+    }
+
+    this.bookingInProgress = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.api.bookVenue({ venueId: venue.id, userId: this.user.id, date, guests, purpose, paymentMethod: method })
+      .subscribe({
+        next: (b) => {
+          this.bookingInProgress = false;
+          this.bookingVenueId = null;
+          this.successMessage = `Payment successful! "${b.venueName}" is booked for ${b.date} (Rs ${b.amount} via ${b.paymentMethod}).`;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          this.bookingInProgress = false;
+          this.errorMessage = error?.error?.message
+            || (error?.status === 409 ? 'Venue is not available on this date.' : 'Could not book venue.');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          this.cdr.markForCheck();
+        }
+      });
   }
 
   openGenerator(venue: Venue): void {
