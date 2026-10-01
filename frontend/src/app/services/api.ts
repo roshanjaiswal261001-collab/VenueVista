@@ -47,6 +47,19 @@ export type PaymentMethod = 'UPI' | 'CARD' | 'NET_BANKING';
 
 export interface PaymentRequest { bookingId: number; userId: number; paymentMethod: PaymentMethod; }
 
+export interface TicketVerifyResponse {
+  ticketNumber: string;
+  valid: boolean;
+  status: string;
+  message: string;
+  eventName: string;
+  eventDate: string;
+  venueName: string | null;
+  seat: string;
+  seatType: string;
+  holderName: string;
+}
+
 const API_BASE_URL = '/api';
 
 @Injectable({ providedIn: 'root' })
@@ -112,6 +125,14 @@ export class Api {
   cancelBooking(bookingId: number, userId: number): Observable<BookingResponse> {
     return this.http.put<BookingResponse>(`${API_BASE_URL}/bookings/${bookingId}/cancel`, null,
       { params: { userId } });
+  }
+
+  // Tickets
+  verifyTicket(code: string): Observable<TicketVerifyResponse> {
+    return this.http.get<TicketVerifyResponse>(`${API_BASE_URL}/tickets/verify/${encodeURIComponent(code)}`);
+  }
+  checkInTicket(code: string): Observable<TicketVerifyResponse> {
+    return this.http.post<TicketVerifyResponse>(`${API_BASE_URL}/tickets/verify/${encodeURIComponent(code)}/check-in`, null);
   }
 
   // Payments

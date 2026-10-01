@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -89,7 +90,7 @@ public class BookingService {
 
         List<Ticket> tickets = new ArrayList<>();
         for (Seat seat : seats) {
-            String ticketNumber = "TKT-" + booking.getId() + "-" + seatLabel(seat);
+            String ticketNumber = "TKT-" + booking.getId() + "-" + seatLabel(seat) + "-" + randomCode();
             tickets.add(new Ticket(ticketNumber, pricePerSeat, "HELD", booking, seat));
         }
         ticketRepository.saveAll(tickets);
@@ -232,6 +233,18 @@ public class BookingService {
             t.setStatus("CANCELLED");
         }
         ticketRepository.saveAll(tickets);
+    }
+
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final String CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    // Ticket code ka random hissa, taaki koi guess na kar sake
+    private String randomCode() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            sb.append(CODE_CHARS.charAt(RANDOM.nextInt(CODE_CHARS.length())));
+        }
+        return sb.toString();
     }
 
     private String seatLabel(Seat seat) {

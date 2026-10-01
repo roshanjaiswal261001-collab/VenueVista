@@ -70,6 +70,14 @@ export const routes: Routes = [
       import('./pages/payment/payment').then(
         m => m.Payment
       )
+  },
+
+  {
+    path: 'verify',
+    loadComponent: () =>
+      import('./pages/verify-ticket/verify-ticket').then(
+        m => m.VerifyTicket
+      )
   }
 
 ];

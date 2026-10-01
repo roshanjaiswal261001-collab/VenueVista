@@ -22,6 +22,7 @@
       <a routerLink="/venues">Venues</a>
       <a routerLink="/events">Events</a>
       <a routerLink="/my-bookings">My Bookings</a>
+      <a routerLink="/verify" *ngIf="user?.role === 'ADMIN'">Verify Ticket</a>
     </aside>
 
 

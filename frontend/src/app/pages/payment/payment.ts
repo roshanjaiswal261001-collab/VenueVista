@@ -3,11 +3,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api, BookingResponse, PaymentMethod, User } from '../../services/api';
+import { TicketQr } from '../../shared/ticket-qr/ticket-qr';
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TicketQr],
   templateUrl: './payment.html',
   styleUrl: './payment.css'
 })

@@ -294,3 +294,11 @@
 .status.pending { background: #fbf5ea; color: #b8893f; }
 .pay-btn { background: #2b211c; color: #fff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; }
 .pay-btn:hover { background: #b8893f; }
+
+/* QR tickets */
+.qr-grid { display: flex; flex-wrap: wrap; gap: 16px; margin: 6px 0 16px; }
+.qr-item { border: 1px dashed #d8cfc5; border-radius: 10px; padding: 12px; text-align: center; background: #fbf9f6; }
+.qr-item app-ticket-qr { display: flex; justify-content: center; }
+.qr-seat { margin: 8px 0 2px; font-weight: 700; }
+.qr-code { margin: 0; font-family: monospace; font-size: 11px; color: #8a7f76; }
+.qr-btn { background: #fbf5ea; color: #b8893f; border: 1px solid #b8893f; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }

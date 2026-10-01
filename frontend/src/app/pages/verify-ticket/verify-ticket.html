@@ -1,0 +1,64 @@
+<div class="page">
+
+  <header class="navbar">
+    <div class="brand"><span>Venue</span>Vista</div>
+    <div class="user-section">
+      <span *ngIf="user">{{ user.name }}</span>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <aside class="sidebar">
+      <h3>Menu</h3>
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/venues">Venues</a>
+      <a routerLink="/events">Events</a>
+      <a routerLink="/my-bookings">My Bookings</a>
+      <a routerLink="/verify" class="active">Verify Ticket</a>
+    </aside>
+
+    <main class="main-content">
+      <h1>Verify Ticket</h1>
+      <p class="subtitle">Entry gate check: enter the code printed under the ticket's QR</p>
+
+      <section class="card">
+        <form class="verify-form" (ngSubmit)="verify()">
+          <input name="code" placeholder="e.g. TKT-12-A5-X7K2Q9" [(ngModel)]="code" autocomplete="off" />
+          <button type="submit" class="primary-btn" [disabled]="loading">
+            {{ loading ? 'Checking...' : 'Verify' }}
+          </button>
+        </form>
+
+        <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+      </section>
+
+      <section class="result" *ngIf="result" [class.valid]="result.valid" [class.invalid]="!result.valid">
+        <div class="result-head">
+          <span class="icon">{{ result.valid ? '✓' : '✕' }}</span>
+          <div>
+            <h2>{{ result.message }}</h2>
+            <p class="code">{{ result.ticketNumber }} · {{ result.status }}</p>
+          </div>
+        </div>
+
+        <div class="details">
+          <p><strong>Event:</strong> {{ result.eventName }}</p>
+          <p><strong>Date:</strong> {{ result.eventDate | date: 'EEE, d MMM y, h:mm a' }}</p>
+          <p><strong>Venue:</strong> {{ result.venueName }}</p>
+          <p><strong>Seat:</strong> {{ result.seat }} ({{ result.seatType }})</p>
+          <p><strong>Holder:</strong> {{ result.holderName }}</p>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="primary-btn" *ngIf="result.valid && result.status === 'ACTIVE'"
+                  [disabled]="checkingIn" (click)="checkIn()">
+            {{ checkingIn ? 'Checking in...' : 'Check In & Allow Entry' }}
+          </button>
+          <button type="button" class="secondary-btn" (click)="reset()">Next Ticket</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>

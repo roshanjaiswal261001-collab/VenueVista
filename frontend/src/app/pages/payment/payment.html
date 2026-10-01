@@ -36,6 +36,7 @@
 
           <div class="ticket-list">
             <div class="ticket" *ngFor="let t of booking.tickets">
+              <app-ticket-qr [code]="t.ticketNumber" [size]="84"></app-ticket-qr>
               <div>
                 <p class="ticket-seat">Seat {{ t.seat }}</p>
                 <p class="ticket-number">{{ t.ticketNumber }}</p>

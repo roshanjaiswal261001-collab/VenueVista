@@ -61,3 +61,6 @@
 .ticket-price { font-weight: 700; }
 .total-line { font-size: 18px; }
 .actions { display: flex; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+
+.ticket { gap: 14px; }
+.ticket > div:nth-child(2) { flex: 1; }

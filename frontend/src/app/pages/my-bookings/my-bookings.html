@@ -90,6 +90,14 @@
             </span>
           </div>
 
+          <div class="qr-grid" *ngIf="b.status === 'CONFIRMED' && showQrFor === b.bookingId">
+            <div class="qr-item" *ngFor="let t of b.tickets">
+              <app-ticket-qr [code]="t.ticketNumber" [size]="120"></app-ticket-qr>
+              <p class="qr-seat">Seat {{ t.seat }}</p>
+              <p class="qr-code">{{ t.ticketNumber }}</p>
+            </div>
+          </div>
+
           <div class="booking-bottom">
             <div class="booking-info">
               <span>Booking #{{ b.bookingId }}</span>
@@ -97,6 +105,11 @@
             </div>
 
             <div class="booking-actions">
+              <button type="button" class="qr-btn" *ngIf="b.status === 'CONFIRMED'"
+                      (click)="showQrFor = showQrFor === b.bookingId ? null : b.bookingId">
+                {{ showQrFor === b.bookingId ? 'Hide QR' : 'Show QR' }}
+              </button>
+
               <p class="amount">₹{{ b.totalAmount | number: '1.0-2' }}</p>
 
               <a class="pay-btn" *ngIf="b.status === 'PENDING_PAYMENT'" [routerLink]="['/payment', b.bookingId]">Pay Now</a>

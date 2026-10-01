@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Api, BookingResponse, User } from '../../services/api';
+import { TicketQr } from '../../shared/ticket-qr/ticket-qr';
 
 @Component({
   selector: 'app-my-bookings',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TicketQr],
   templateUrl: './my-bookings.html',
   styleUrl: './my-bookings.css'
 })
@@ -17,6 +18,7 @@ export class MyBookings implements OnInit {
   cancellingId: number | null = null;
   errorMessage = '';
   successMessage = '';
+  showQrFor: number | null = null;
 
   constructor(
     private api: Api,
